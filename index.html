@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NetCiné – Catalogue Cinématographique</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <header id="navbar">
+    <div class="nav-container">
+      <h1 class="logo">NET<span>CINÉ</span></h1>
+
+      <nav class="nav-liens">
+        <a href="#section-action"    class="nav-lien">Action</a>
+        <a href="#section-thriller"  class="nav-lien">Thriller</a>
+        <a href="#section-sci-fi"    class="nav-lien">Sci-Fi</a>
+        <a href="#section-drame"     class="nav-lien">Drame</a>
+        <a href="#section-animation" class="nav-lien">Animation</a>
+        <a href="#section-horreur"   class="nav-lien">Horreur</a>
+        <a href="#section-aventure"  class="nav-lien">Aventure</a>
+        <a href="#section-comedie"   class="nav-lien">Comédie</a>
+      </nav>
+
+      <div class="nav-droite">
+        <div class="search-wrapper">
+          <span class="search-icon">&#128269;</span>
+          <input type="text" id="search-input" placeholder="Titre, réalisateur…" aria-label="Rechercher" />
+        </div>
+        <select id="stars-select" class="filtre-select" aria-label="Note minimale">
+          <option value="0">Toutes notes</option>
+          <option value="4">4 étoiles +</option>
+          <option value="5">5 étoiles</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-label">Catalogue 2025</p>
+      <h2 class="hero-titre">Les Films Cultes</h2>
+      <p class="hero-sous">Explorez les oeuvres incontournables du 7eme art</p>
+      <button class="hero-btn" id="hero-explorer-btn">&#9654; Explorer</button>
+    </div>
+  </section>
+
+  <!-- ===== ZONE RÉSULTATS RECHERCHE ===== -->
+  <div id="resultats-recherche" class="resultats-wrapper hidden">
+    <div class="resultats-titre">
+      Résultats pour : <span id="terme-recherche"></span>
+    </div>
+    <div id="grille-recherche" class="grille-recherche"></div>
+    <div id="no-result" class="no-result hidden">Aucun film trouvé.</div>
+  </div>
+
+  <!-- ===== CATALOGUE PAR RANGÉES (généré par JS) ===== -->
+  <main id="catalogue"></main>
+
+  <!-- ===== MODAL DÉTAIL ===== -->
+  <div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <button id="modal-close" class="modal-close" aria-label="Fermer">&#10005;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer">
+    <p class="logo footer-logo">NET<span>CINÉ</span></p>
+    <p class="footer-texte">Projet L1S2 Informatique — Catalogue Cinématographique &copy; 2025</p>
+  </footer>
+
+  <script src="Main.js"></script>
+</body>
+</html>

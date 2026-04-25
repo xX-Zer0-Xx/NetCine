@@ -1,0 +1,683 @@
+/* ============================================================
+   style.css — NetCiné v2
+   Galerie style Netflix : rangées par genre, hover zoom
+   L1S2 Informatique — HTML / CSS / JS débutant
+   ============================================================ */
+
+
+/* ──────────────────────────────────────
+   1. VARIABLES CSS
+   ────────────────────────────────────── */
+:root {
+  --fond:           #141414;
+  --fond-carte:     #1c1c1c;
+  --fond-nav:       #000000ee;
+  --rouge:          #e50914;
+  --rouge-clair:    #ff3d47;
+  --texte:          #ffffff;
+  --texte-doux:     #b3b3b3;
+  --bordure:        #2a2a2a;
+  --etoile:         #f5c518;
+  --hero-gradient:  linear-gradient(to right, #000 0%, #0006 60%, transparent 100%);
+
+  --police-titre: 'Bebas Neue', sans-serif;
+  --police-corps: 'Lato', sans-serif;
+
+  /* Durée des transitions */
+  --t-rapide: 0.2s;
+  --t-normal: 0.35s;
+}
+
+
+/* ──────────────────────────────────────
+   2. RESET & BASE
+   ────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-corps);
+  overflow-x: hidden;
+}
+
+a { text-decoration: none; color: inherit; }
+button, select, input { font-family: var(--police-corps); }
+img { display: block; max-width: 100%; }
+
+
+/* ──────────────────────────────────────
+   3. NAVBAR
+   ────────────────────────────────────── */
+#navbar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: var(--fond-nav);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--bordure);
+  animation: glisser-haut 0.5s ease;
+}
+
+.nav-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Logo */
+.logo {
+  font-family: var(--police-titre);
+  font-size: 1.8rem;
+  letter-spacing: 3px;
+  flex-shrink: 0;
+  color: var(--texte);
+}
+.logo span { color: var(--rouge); }
+
+/* Liens de navigation par genre */
+.nav-liens {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  overflow-x: auto;     /* scroll horizontal si écran étroit */
+  scrollbar-width: none;
+}
+.nav-liens::-webkit-scrollbar { display: none; }
+
+.nav-lien {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--texte-doux);
+  white-space: nowrap;
+  transition: color var(--t-rapide);
+}
+.nav-lien:hover { color: var(--texte); }
+
+/* Droite : recherche + filtre */
+.nav-droite {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: #222;
+  border: 1px solid var(--bordure);
+  border-radius: 4px;
+  padding: 0 10px;
+  gap: 6px;
+  transition: border-color var(--t-rapide);
+}
+.search-wrapper:focus-within { border-color: var(--rouge); }
+
+.search-icon { font-size: 0.9rem; color: var(--texte-doux); }
+
+#search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--texte);
+  font-size: 0.85rem;
+  padding: 7px 0;
+  width: 180px;
+}
+#search-input::placeholder { color: var(--texte-doux); }
+
+.filtre-select {
+  background: #222;
+  border: 1px solid var(--bordure);
+  border-radius: 4px;
+  color: var(--texte);
+  font-size: 0.82rem;
+  padding: 7px 10px;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color var(--t-rapide);
+}
+.filtre-select:focus {
+  outline: none;
+  border-color: var(--rouge);
+}
+
+
+/* ──────────────────────────────────────
+   4. HERO
+   ────────────────────────────────────── */
+#hero {
+  position: relative;
+  height: 70vh;
+  min-height: 400px;
+  margin-top: 60px;
+  background:
+    var(--hero-gradient),
+    radial-gradient(ellipse at 70% 50%, #1a0000 0%, #0a0a0a 70%);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Lignes cinématiques en arrière-plan */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255,255,255,0.015) 3px,
+    rgba(255,255,255,0.015) 4px
+  );
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 80px;
+  animation: apparition 0.9s ease 0.2s both;
+}
+
+.hero-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--rouge);
+  margin-bottom: 12px;
+}
+
+.hero-titre {
+  font-family: var(--police-titre);
+  font-size: clamp(3.5rem, 8vw, 7rem);
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.hero-sous {
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  color: var(--texte-doux);
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin-bottom: 32px;
+  max-width: 480px;
+}
+
+.hero-btn {
+  background-color: var(--rouge);
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color var(--t-rapide), transform var(--t-rapide);
+}
+.hero-btn:hover {
+  background-color: var(--rouge-clair);
+  transform: scale(1.04);
+}
+
+
+/* ──────────────────────────────────────
+   5. ZONE DE RÉSULTATS DE RECHERCHE
+   ────────────────────────────────────── */
+.resultats-wrapper {
+  padding: 40px 60px 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.resultats-titre {
+  font-family: var(--police-titre);
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  color: var(--texte-doux);
+  margin-bottom: 24px;
+}
+.resultats-titre span {
+  color: var(--texte);
+}
+
+/* Grille flat pour les résultats */
+.grille-recherche {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.no-result {
+  color: var(--texte-doux);
+  font-size: 1rem;
+  padding: 40px 0;
+}
+
+
+/* ──────────────────────────────────────
+   6. RANGÉES NETFLIX (catalogue principal)
+   ────────────────────────────────────── */
+#catalogue {
+  padding: 20px 0 80px;
+}
+
+/* Une rangée = un genre */
+.rangee-genre {
+  margin-bottom: 48px;
+  /* overflow visible pour le zoom des cartes */
+  overflow: visible;
+}
+
+/* En-tête de rangée */
+.rangee-entete {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 0 60px;
+  margin-bottom: 16px;
+}
+
+.rangee-titre {
+  font-family: var(--police-titre);
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  color: var(--texte);
+}
+
+.rangee-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--rouge);
+  border: 1px solid var(--rouge);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+/* Conteneur des cartes avec scroll horizontal */
+.rangee-films {
+  display: flex;
+  gap: 8px;
+  padding: 20px 60px;   /* espace vertical pour permettre le zoom */
+  overflow-x: auto;
+  overflow-y: visible;  /* IMPORTANT : sinon le zoom est coupé */
+  scrollbar-width: thin;
+  scrollbar-color: #444 transparent;
+  /* Évite que le padding-bottom soit ignoré avec overflow */
+  padding-bottom: 30px;
+}
+.rangee-films::-webkit-scrollbar { height: 4px; }
+.rangee-films::-webkit-scrollbar-track { background: transparent; }
+.rangee-films::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+
+
+/* ──────────────────────────────────────
+   7. CARTE DE FILM (style Netflix)
+   ────────────────────────────────────── */
+.carte-film {
+  flex-shrink: 0;         /* la carte ne rétrécit pas */
+  width: 160px;
+  border-radius: 4px;
+  overflow: visible;       /* pour le zoom qui dépasse */
+  cursor: pointer;
+  position: relative;
+  /* L'animation de zoom se fait sur un enfant pour ne pas
+     perturber le flux flex */
+}
+
+/* Contenu interne (ce qui zoome) */
+.carte-inner {
+  width: 160px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--fond-carte);
+  transition:
+    transform var(--t-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow var(--t-normal);
+  transform-origin: center bottom;
+}
+
+/* ✨ EFFET HOVER NETFLIX : zoom + élévation + halo rouge */
+.carte-film:hover .carte-inner {
+  transform: scale(1.25);
+  box-shadow:
+    0 0 0 2px var(--rouge),
+    0 16px 40px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(229, 9, 20, 0.3);
+  z-index: 100;
+  border-radius: 6px;
+}
+
+/* La carte à gauche zoome vers la droite,
+   celle à droite vers la gauche (pour ne pas dépasser le bord) */
+.carte-film:first-child .carte-inner  { transform-origin: left bottom; }
+.carte-film:last-child  .carte-inner  { transform-origin: right bottom; }
+
+/* Zone de l'affiche */
+.carte-affiche {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+.carte-affiche img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder emoji si pas d'image */
+.carte-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+}
+
+/* Badge genre sur la carte */
+.carte-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--rouge);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+/* Overlay d'infos : apparaît au hover */
+.carte-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity var(--t-normal);
+}
+
+.carte-film:hover .carte-overlay { opacity: 1; }
+
+.overlay-titre {
+  font-family: var(--police-titre);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.overlay-annee {
+  font-size: 0.68rem;
+  color: var(--texte-doux);
+  margin-bottom: 5px;
+}
+
+.overlay-etoiles {
+  font-size: 0.75rem;
+  display: flex;
+  gap: 1px;
+}
+
+/* Barre d'infos sous la carte */
+.carte-infos {
+  padding: 8px 10px 10px;
+  background: var(--fond-carte);
+}
+
+.carte-titre-bas {
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--texte);
+}
+
+.carte-real {
+  font-size: 0.65rem;
+  color: var(--texte-doux);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+
+/* ──────────────────────────────────────
+   8. ÉTOILES
+   ────────────────────────────────────── */
+.etoile-pleine { color: var(--etoile); }
+.etoile-vide   { color: #444; }
+
+
+/* ──────────────────────────────────────
+   9. MODAL
+   ────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fondu-entree 0.2s ease;
+}
+
+.modal-box {
+  background: #1f1f1f;
+  border-radius: 8px;
+  border: 1px solid #333;
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: zoom-entree 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px; right: 18px;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid #444;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  color: var(--texte);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--t-rapide), color var(--t-rapide);
+  z-index: 10;
+}
+.modal-close:hover {
+  background: var(--rouge);
+  border-color: var(--rouge);
+}
+
+/* Contenu de la modal */
+.modal-hero {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  background: linear-gradient(135deg, #0d0d0d, #1a1a1a);
+  border-radius: 8px 8px 0 0;
+  position: relative;
+}
+
+.modal-hero-gradient {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, transparent, #1f1f1f);
+}
+
+.modal-body {
+  padding: 20px 28px 28px;
+}
+
+.modal-titre {
+  font-family: var(--police-titre);
+  font-size: 2.2rem;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.modal-meta {
+  color: var(--texte-doux);
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.modal-etoiles {
+  font-size: 1.2rem;
+  display: flex;
+  gap: 3px;
+  margin-bottom: 18px;
+}
+
+.modal-desc {
+  color: #ccc;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+
+.modal-genre-badge {
+  display: inline-block;
+  background: var(--rouge);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 3px;
+}
+
+
+/* ──────────────────────────────────────
+   10. UTILITAIRE
+   ────────────────────────────────────── */
+.hidden { display: none !important; }
+
+
+/* ──────────────────────────────────────
+   11. FOOTER
+   ────────────────────────────────────── */
+#footer {
+  background: #0a0a0a;
+  border-top: 1px solid var(--bordure);
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.footer-logo {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.footer-texte {
+  color: var(--texte-doux);
+  font-size: 0.78rem;
+}
+
+
+/* ──────────────────────────────────────
+   12. ANIMATIONS KEYFRAMES
+   ────────────────────────────────────── */
+@keyframes glisser-haut {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes apparition {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fondu-entree {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes zoom-entree {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Animation d'apparition des rangées */
+.rangee-genre {
+  animation: apparition 0.5s ease both;
+}
+
+
+/* ──────────────────────────────────────
+   13. RESPONSIVE
+   ────────────────────────────────────── */
+
+/* Tablette */
+@media (max-width: 900px) {
+  .nav-liens { display: none; }
+
+  .hero-content { padding: 0 40px; }
+
+  .rangee-entete,
+  .rangee-films  { padding-left: 24px; padding-right: 24px; }
+
+  .resultats-wrapper { padding: 30px 24px 20px; }
+}
+
+/* Mobile */
+@media (max-width: 560px) {
+  .nav-container { padding: 0 16px; gap: 12px; }
+
+  #search-input { width: 110px; }
+
+  .hero-content { padding: 0 24px; }
+
+  .hero-titre { font-size: 3rem; }
+
+  .rangee-entete,
+  .rangee-films  { padding-left: 12px; padding-right: 12px; }
+
+  .carte-film,
+  .carte-inner   { width: 130px; }
+
+  .modal-titre { font-size: 1.7rem; }
+  .modal-body  { padding: 16px 20px 24px; }
+}
